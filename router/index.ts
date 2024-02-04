@@ -1,37 +1,6 @@
 import * as http from "node:http";
-
-type Method = "GET" | "POST" | "PUT" | "DELETE";
-
-export type Router = {
-    init: (server: http.Server, port: number, callback?: (req: http.IncomingMessage, res: http.ServerResponse) => void) => void;
-    server?: http.Server;
-    createServer(): void;
-    routes?: Map<
-        string,
-        Map<
-            Method,
-            (req: http.IncomingMessage, res: http.ServerResponse) => void
-        >
-    >;
-    get(
-        path: string,
-        handler: (req: http.IncomingMessage, res?: http.ServerResponse) => void
-    ): void;
-    post(
-        path: string,
-        handler: (req: http.IncomingMessage, res?: http.ServerResponse) => void
-    ): void;
-    put(
-        path: string,
-        handler: (req: http.IncomingMessage, res?: http.ServerResponse) => void
-    ): void;
-    delete(
-        path: string,
-        handler: (req: http.IncomingMessage, res?: http.ServerResponse) => void
-    ): void;
-
- 
-};
+import { type Router, type Method } from "./types";
+import { welcomeConsole } from "./util";
 
 const router = {} as Router;
 
@@ -74,24 +43,19 @@ router.init = function (
     callback?
 ) {
     this.server = server;
-
     server.on("request", (req, res) => {
-
         const url = new URL(req.url || "/", `http://${req.headers.host}`);
         const method = req.method as Method;
-
         const handler = this.routes?.get(String(url.pathname))?.get(method);
-    
         handler?.(req, res);
-        
         if (callback) callback(req, res);
-    
     });
 
+    welcomeConsole();
 
     server.listen(port);
 };
 
-export default function slash() {
+export default function pepper() {
     return router as Router;
 }
