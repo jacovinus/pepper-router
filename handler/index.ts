@@ -1,5 +1,7 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 import context from "../context/ctx";
+import { listRoutesFromContext, writeLogsToFile } from "../router/util";
+
 import * as fs from "fs";
 
 export type Handler = (
@@ -9,11 +11,10 @@ export type Handler = (
 
 /**
  *  PUT /items
- * 
+ *
  * update item in context
- * 
- * 
- */
+ *
+ **/
 const putItemHandler: Handler = (req, res) => {
     const body = [] as Buffer[];
     req.on("data", (chunk: any) => body.push(chunk));
@@ -26,12 +27,12 @@ const putItemHandler: Handler = (req, res) => {
     });
 };
 
-
 /**
  * GET /items
- * 
+ *
  * return all items in context
- * **/
+ *
+ **/
 const getItemsHandler: Handler = (req, res) => {
     res?.writeHead(200, { "Content-Type": "application/json" });
     res?.write(JSON.stringify(context.getAll()));
@@ -40,11 +41,10 @@ const getItemsHandler: Handler = (req, res) => {
 
 /**
  * GET /items/open/file={file}
- * 
+ *
  * opens items file and return its content
- * 
- * 
- */
+ *
+ **/
 const openItemHandler: Handler = (req, res) => {
     const url = new URL(req?.url || "/", "http://localhost");
     const file = url.searchParams.get("file") as string;
@@ -62,11 +62,10 @@ const openItemHandler: Handler = (req, res) => {
 
 /**
  * GET /items/search?id={id}
- * 
+ *
  * return item by id
  *
- * 
- * */
+ **/
 const searchItemHandler: Handler = (req, res) => {
     const url = new URL(req?.url || "/", "http://localhost");
     const searchParams = new URLSearchParams(url?.searchParams);
@@ -78,11 +77,23 @@ const searchItemHandler: Handler = (req, res) => {
 };
 
 /**
- * POST /items 
- * 
+ * GET /routes
+ *
+ * list all routes in context
+ *
+ */
+const listRoutesHandler: Handler = (req, res) => {
+    const routes = listRoutesFromContext();
+    res?.writeHead(200, { "Content-Type": "application/json" });
+    res?.write(JSON.stringify(routes));
+    res?.end();
+};
+
+/**
+ * POST /items
+ *
  * adds new item to context
- * 
- * 
+ *
  */
 const addItemHandler: Handler = (req, res) => {
     const body = [] as Buffer[];
@@ -98,18 +109,53 @@ const addItemHandler: Handler = (req, res) => {
 
 /**
  * POST /items/write/file={file}
- * 
+ *
  * write items to file
- * 
- * 
+ *
  */
 const writeItemHandler: Handler = (req, res) => {
     const url = new URL(req?.url || "/", "http://localhost");
     const file = url.searchParams.get("file") as string;
     const items = context.getAll();
     fs.writeFileSync(file, JSON.stringify(items));
+
     res?.writeHead(200, { "Content-Type": "text/html" });
     res?.write(`200 OK file ${file} written`);
+    res?.end();
+};
+
+/**
+ * POST /logs/write/file={file}
+ *
+ * write logs to file
+ *
+ * @param fileName
+ *
+ *
+ * */
+
+const writeLogsToFileHandler: Handler = (req, res) => {
+    const url = new URL(req?.url || "/", "http://localhost");
+    const file = url.searchParams.get("file") as string;
+    writeLogsToFile(file);
+    res?.writeHead(200, { "Content-Type": "text/html" });
+    res?.write(`200 OK file ${file} written`);
+    res?.end();
+};
+
+/**
+ * GET /logs/read/file={file}
+ *
+ * read logs from file
+ *
+ */
+
+const readLogsFromFileHandler: Handler = (req, res) => {
+    const url = new URL(req?.url || "/", "http://localhost");
+    const file = url.searchParams.get("file") as string;
+    const logs = fs.readFileSync(file, "utf8");
+    res?.writeHead(200, { "Content-Type": "text/html" });
+    res?.write(logs);
     res?.end();
 };
 
@@ -118,6 +164,9 @@ export {
     getItemsHandler,
     openItemHandler,
     searchItemHandler,
+    listRoutesHandler,
     addItemHandler,
     writeItemHandler,
+    writeLogsToFileHandler,
+    readLogsFromFileHandler,
 };

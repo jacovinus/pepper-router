@@ -8,6 +8,7 @@ type Context = {
     delete: (id: string) => void;
     clear: () => void;
     get: (id: string) => ContextItem;
+    getByProperty: (property: string, value: string) => ContextItem;
     getAll: () => ContextItem[];
     items: Record<string, ContextItem>;
 };
@@ -34,6 +35,11 @@ const context: Context = {
 
     get(id: string) {
         return this.items[id];
+    },
+
+    getByProperty(property: string, value: string) {
+        const entries = Object.values(this.items);
+        return entries.filter((item) => item[property] === value) ?? [];
     },
 
     getAll() {
