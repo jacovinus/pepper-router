@@ -8,7 +8,7 @@ import {
     addItemHandler,
     writeItemHandler,
     writeLogsToFileHandler,
-    readLogsFromFileHandler
+    readLogsFromFileHandler,
 } from "../handler";
 
 import {
@@ -38,7 +38,7 @@ routes.get("/assets/meme", (req, res) => {
     res?.writeHead(200, { "Content-Type": "image/png" });
     res?.write(image);
     res?.end();
-})
+});
 
 /**
  * get all context items
@@ -77,25 +77,23 @@ routes.post(ITEMS_ROUTE, (req, res) => addItemHandler(req, res));
 addRouteToContext("POST", WRITE_ITEM_ROUTE, "write context items into file");
 routes.post(WRITE_ITEM_ROUTE, (req, res) => writeItemHandler(req, res));
 
-
 /**
  * write logs to file
- * 
+ *
  * @param fileName
- * 
+ *
  **/
- 
-addRouteToContext("POST", WRITE_LOGS_ROUTE, "write logs to file"); 
+
+addRouteToContext("POST", WRITE_LOGS_ROUTE, "write logs to file");
 routes.post(WRITE_LOGS_ROUTE, (req, res) => writeLogsToFileHandler(req, res));
 
 /**
  * read logs from file
- * 
+ *
  */
 
 addRouteToContext("GET", READ_LOGS_ROUTE, "read logs from file");
 routes.get(READ_LOGS_ROUTE, (req, res) => readLogsFromFileHandler(req, res));
-
 
 /**
  * update context item

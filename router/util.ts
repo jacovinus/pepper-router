@@ -40,7 +40,6 @@ const writeLogsToFile = (fileName: string) => {
         .getByProperty("type", "log")
         .map((log: LogLine) => log.text)
         .join("\n");
-    console.log(logs);
     fs.writeFileSync(fileName, logs);
 };
 

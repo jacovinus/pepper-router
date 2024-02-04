@@ -10,11 +10,10 @@ type RouterInitFn = (server: Server, port: number, callback?: ServerFn) => void;
 type RoutesMap = Map<string, Map<Method, ServerFn>>;
 
 type LogLine = {
-    type: "log",
-    text: string,
-    created: number
-}
-
+    type: "log";
+    text: string;
+    created: number;
+};
 
 type RouteListItem = {
     type: "route";

@@ -117,8 +117,6 @@ const writeItemHandler: Handler = (req, res) => {
     const url = new URL(req?.url || "/", "http://localhost");
     const file = url.searchParams.get("file") as string;
     const items = context.getAll();
-    console.log(file)
-    console.log(items)
     fs.writeFileSync(file, JSON.stringify(items));
 
     res?.writeHead(200, { "Content-Type": "text/html" });
@@ -128,12 +126,12 @@ const writeItemHandler: Handler = (req, res) => {
 
 /**
  * POST /logs/write/file={file}
- * 
+ *
  * write logs to file
- * 
+ *
  * @param fileName
- * 
- * 
+ *
+ *
  * */
 
 const writeLogsToFileHandler: Handler = (req, res) => {
@@ -143,13 +141,13 @@ const writeLogsToFileHandler: Handler = (req, res) => {
     res?.writeHead(200, { "Content-Type": "text/html" });
     res?.write(`200 OK file ${file} written`);
     res?.end();
-}
+};
 
 /**
  * GET /logs/read/file={file}
- * 
+ *
  * read logs from file
- * 
+ *
  */
 
 const readLogsFromFileHandler: Handler = (req, res) => {
@@ -159,8 +157,7 @@ const readLogsFromFileHandler: Handler = (req, res) => {
     res?.writeHead(200, { "Content-Type": "text/html" });
     res?.write(logs);
     res?.end();
-}
-
+};
 
 export {
     putItemHandler,
@@ -171,5 +168,5 @@ export {
     addItemHandler,
     writeItemHandler,
     writeLogsToFileHandler,
-    readLogsFromFileHandler
+    readLogsFromFileHandler,
 };
