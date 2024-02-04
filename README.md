@@ -1,4 +1,4 @@
-## NodeStack
+## Pepper Router
 
 🚧 Warning: this is just for fun, not to take it seriously at all. 
 
