@@ -3,7 +3,6 @@ import { type Method, type RouteListItem, type LogLine } from "./types";
 import { IncomingMessage, ServerResponse } from "http";
 import fs from "fs";
 
-const imageToAscii = require("image-to-ascii");
 
 const addRouteToContext = (
     method: Method,

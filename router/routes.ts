@@ -33,12 +33,6 @@ routes.get("/", (req, res) => {
     res?.end();
 });
 
-routes.get("/assets/meme", (req, res) => {
-    const image = require("../assets/meme-welcome.png");
-    res?.writeHead(200, { "Content-Type": "image/png" });
-    res?.write(image);
-    res?.end();
-});
 
 /**
  * get all context items
