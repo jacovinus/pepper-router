@@ -1,4 +1,8 @@
+
+
 ## Pepper Router
+
+[![CodeQL](https://github.com/jacovinus/pepper-router/actions/workflows/CodeQL.yml/badge.svg?branch=main)](https://github.com/jacovinus/pepper-router/actions/workflows/CodeQL.yml)
 
 🚧 Warning: this is just for fun, not to take it seriously at all. 
 
