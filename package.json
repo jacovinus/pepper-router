@@ -1,23 +1,23 @@
 {
-  "name": "nodestack",
+  "name": "pepper-router",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "npx tsc index.ts --watch",
-    "start": "npx nodemon index.js",
-    "build": "bun build index.ts --outdir ./dist --target bun"
+    "test": "jest",
+    "test:watch": "jest --watchAll --silent=false",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/main.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.11.16",
-    "bun": "^1.0.26",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.17",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
-  },
-  "dependencies": {
-    "nodemon": "^3.0.3"
   }
 }

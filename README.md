@@ -12,7 +12,7 @@ CRUD data into memory
 ---
 
 ### Router 
- <img src="./assets/Screenshot 2024-02-04 155258.png" width="600px" alt="routes">
+ <img src="./src/assets/Screenshot 2024-02-04 155258.png" width="600px" alt="routes">
 
  - By default it writes data into memory through context
  - It could write the context entries into file
@@ -80,7 +80,7 @@ For handling the data you could make use of the [context tools](./context/ctx.ts
 ---
 
 ### Logs 
-<img src="./assets/Screenshot 2024-02-04 155636.png" width="600px" alt="logs">
+<img src="./src/assets/Screenshot 2024-02-04 155636.png" width="600px" alt="logs">
 
 - Writes logs at context at every request
 - Could write logs into a file
