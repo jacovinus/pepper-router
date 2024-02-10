@@ -1,9 +1,12 @@
-import context from "../context/ctx";
+import {Context} from "../context";
 import { type Method, type RouteListItem, type LogLine } from "./types";
 import { IncomingMessage, ServerResponse } from "http";
 import fs from "fs";
 
 
+const context = new Context();
+
+// add route to context
 const addRouteToContext = (
     method: Method,
     path: string,
@@ -17,6 +20,7 @@ const addRouteToContext = (
     });
 };
 
+// list routes from context
 const listRoutesFromContext = () => {
     const routes = context.getByProperty("type", "route") as RouteListItem[];
     return routes?.map(({ method, path, description }) => ({
@@ -26,6 +30,7 @@ const listRoutesFromContext = () => {
     }));
 };
 
+// add log to context
 const addLogToContext = (logLine: string) => {
     context.add({
         type: "log",
@@ -34,6 +39,7 @@ const addLogToContext = (logLine: string) => {
     } as LogLine);
 };
 
+// write logs to file
 const writeLogsToFile = (fileName: string) => {
     const logs = context
         .getByProperty("type", "log")
@@ -43,7 +49,6 @@ const writeLogsToFile = (fileName: string) => {
 };
 
 // calculate max length in characters from column
-
 const maxTdLengthFromColumn = (data: Array<any>) => {
     return data.reduce((acc, item) => {
         return {
@@ -57,12 +62,14 @@ const maxTdLengthFromColumn = (data: Array<any>) => {
     });
 };
 
+// write line
 const writeLine = (line: string[]) => {
     return `| ${line
         .map((header) => "-".repeat(header.length))
         .join(" | ")} |\n`;
 };
 
+// list routes as console table
 const listRoutesAsConsoleTable = () => {
     const routes = listRoutesFromContext();
     let headerNames = ["Method", "Path", "Description"];
@@ -87,19 +94,17 @@ const listRoutesAsConsoleTable = () => {
     console.log(table);
 };
 
+// welcome screen at console
 const welcomeConsole = () => {
     const AppName = " ⚡🌶️ Pepper Router 🌶️⚡ ";
-
     console.log("\n", "\x1b[36m%s\x1b[0m", AppName, "\n");
-
     console.log(" \n Welcome to the Api Server! \n");
-
     console.log(" \n Available routes: \n");
     listRoutesAsConsoleTable();
-
     console.log(" \n Good luck! \n");
 };
 
+// simple logger at console
 const simpleLogger = (req: IncomingMessage, res: ServerResponse) => {
     const logLine = `${new Date()} - [${req.method}] "${req.url}" - ${
         res.statusCode
@@ -111,6 +116,7 @@ const simpleLogger = (req: IncomingMessage, res: ServerResponse) => {
 };
 
 export {
+    context,
     addRouteToContext,
     listRoutesFromContext,
     welcomeConsole,

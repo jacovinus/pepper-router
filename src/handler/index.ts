@@ -1,6 +1,5 @@
 import { IncomingMessage, ServerResponse } from "node:http";
-import context from "../context/ctx";
-import { listRoutesFromContext, writeLogsToFile } from "../router/util";
+import { context, listRoutesFromContext, writeLogsToFile } from "../router/util";
 
 import * as fs from "fs";
 
@@ -8,6 +7,9 @@ export type Handler = (
     req: IncomingMessage,
     res: ServerResponse | undefined
 ) => void;
+
+
+
 
 /**
  *  PUT /items
@@ -82,7 +84,7 @@ const searchItemHandler: Handler = (req, res) => {
  * list all routes in context
  *
  */
-const listRoutesHandler: Handler = (req, res) => {
+const listRoutesHandler: Handler = (_, res) => {
     const routes = listRoutesFromContext();
     res?.writeHead(200, { "Content-Type": "application/json" });
     res?.write(JSON.stringify(routes));
