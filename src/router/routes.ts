@@ -1,24 +1,31 @@
 import pepper from "./";
 import {
-    putItemHandler,
-    getItemsHandler,
-    openItemHandler,
-    searchItemHandler,
-    listRoutesHandler,
+    // context items
     addItemHandler,
-    writeItemHandler,
+    getItemsHandler,
+    searchItemHandler,
+    putItemHandler,
+    deleteItemHandler,
+    // read / write context items to file
+    writeItemsHandler,
+    readItemsHandler,
+    // routes
+    listRoutesHandler,
+    // logs
+    readLogsFromContextHandler,
     writeLogsToFileHandler,
     readLogsFromFileHandler,
 } from "../handler";
 
 import {
-    ITEMS_ROUTE,
-    OPEN_ITEM_ROUTE,
-    SEARCH_ITEM_ROUTE,
-    WRITE_ITEM_ROUTE,
-    LIST_ROUTES_ROUTE,
-    WRITE_LOGS_ROUTE,
-    READ_LOGS_ROUTE,
+    ITEMS_,
+    ITEM_SEARCH_,
+    ITEMS_WRITE_,
+    ITEMS_READ_,
+    ROUTES_LIST_,
+    LOGS_,
+    LOGS_WRITE_,
+    LOGS_READ_,
 } from "./consts";
 import { addRouteToContext } from "./util";
 
@@ -33,43 +40,64 @@ routes.get("/", (req, res) => {
     res?.end();
 });
 
-
 /**
  * get all context items
  *
  */
-addRouteToContext("GET", ITEMS_ROUTE, "get all context items");
-routes.get(ITEMS_ROUTE, (req, res) => getItemsHandler(req, res));
-
-/**
- * open items file
- */
-addRouteToContext("GET", OPEN_ITEM_ROUTE, "open items file");
-routes.get(OPEN_ITEM_ROUTE, (req, res) => openItemHandler(req, res));
+addRouteToContext("GET", ITEMS_, "get all context items");
+routes.get(ITEMS_, (req, res) => getItemsHandler(req, res));
 
 /**
  * search item by id
  */
-addRouteToContext("GET", SEARCH_ITEM_ROUTE, "search item by id");
-routes.get(SEARCH_ITEM_ROUTE, (req, res) => searchItemHandler(req, res));
-
-/**
- * list routes from context
- */
-addRouteToContext("GET", LIST_ROUTES_ROUTE, "list routes from context");
-routes.get(LIST_ROUTES_ROUTE, (req, res) => listRoutesHandler(req, res));
+addRouteToContext("GET", ITEM_SEARCH_, "search item by id");
+routes.get(ITEM_SEARCH_, (req, res) => searchItemHandler(req, res));
 
 /**
  * add item to context
  */
-addRouteToContext("POST", ITEMS_ROUTE, "add item to context");
-routes.post(ITEMS_ROUTE, (req, res) => addItemHandler(req, res));
+addRouteToContext("POST", ITEMS_, "add item to context");
+routes.post(ITEMS_, (req, res) => addItemHandler(req, res));
+
+/**
+ * update context item
+ */
+addRouteToContext("PUT", ITEMS_, "update context item");
+routes.put(ITEMS_, (req, res) => putItemHandler(req, res));
+
+/**
+ * delete context item
+ */
+addRouteToContext("DELETE", ITEMS_, "delete context item");
+routes.delete(ITEMS_, (req, res) => deleteItemHandler(req, res));
+
+// read / write context items to file
+
+/**
+ * open items file
+ */
+addRouteToContext("GET", ITEMS_READ_, "read items file");
+routes.get(ITEMS_READ_, (req, res) => readItemsHandler(req, res));
 
 /**
  * write context items into file
  */
-addRouteToContext("POST", WRITE_ITEM_ROUTE, "write context items into file");
-routes.post(WRITE_ITEM_ROUTE, (req, res) => writeItemHandler(req, res));
+addRouteToContext("POST", ITEMS_WRITE_, "write context items into file");
+routes.post(ITEMS_WRITE_, (req, res) => writeItemsHandler(req, res));
+
+/**
+ * list routes from context
+ */
+addRouteToContext("GET", ROUTES_LIST_, "list routes from context");
+routes.get(ROUTES_LIST_, (req, res) => listRoutesHandler(req, res));
+
+/**
+ * read logs from context 
+ * 
+ */
+addRouteToContext("GET", LOGS_, "read logs from context");
+routes.get(LOGS_, (req, res) => readLogsFromContextHandler(req, res));
+
 
 /**
  * write logs to file
@@ -77,22 +105,14 @@ routes.post(WRITE_ITEM_ROUTE, (req, res) => writeItemHandler(req, res));
  * @param fileName
  *
  **/
-
-addRouteToContext("POST", WRITE_LOGS_ROUTE, "write logs to file");
-routes.post(WRITE_LOGS_ROUTE, (req, res) => writeLogsToFileHandler(req, res));
+addRouteToContext("POST", LOGS_WRITE_, "write logs to file");
+routes.post(LOGS_WRITE_, (req, res) => writeLogsToFileHandler(req, res));
 
 /**
  * read logs from file
  *
  */
-
-addRouteToContext("GET", READ_LOGS_ROUTE, "read logs from file");
-routes.get(READ_LOGS_ROUTE, (req, res) => readLogsFromFileHandler(req, res));
-
-/**
- * update context item
- */
-addRouteToContext("PUT", ITEMS_ROUTE, "update context item");
-routes.put(ITEMS_ROUTE, (req, res) => putItemHandler(req, res));
+addRouteToContext("GET", LOGS_READ_, "read logs from file");
+routes.get(LOGS_READ_, (req, res) => readLogsFromFileHandler(req, res));
 
 export default routes;
