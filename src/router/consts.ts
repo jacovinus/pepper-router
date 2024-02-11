@@ -1,17 +1,35 @@
-const ITEMS_ROUTE = "/items";
-const SEARCH_ITEM_ROUTE = "/items/search";
-const WRITE_ITEM_ROUTE = "/items/write";
-const OPEN_ITEM_ROUTE = "/items/open";
-const LIST_ROUTES_ROUTE = "/routes";
-const WRITE_LOGS_ROUTE = "/write/logs";
-const READ_LOGS_ROUTE = "/read/logs";
+/**
+ * router default routes
+ **/
+
+// context items
+const ITEMS_ = "/items";
+const ITEM_SEARCH_ = `${ITEMS_}/search`;
+
+//  write context items to file
+const ITEMS_WRITE_ = `${ITEMS_}/write`;
+const ITEMS_READ_ = `${ITEMS_}/read`;
+
+// routes stored at context
+const ROUTES_LIST_ = "routes/list";
+
+// log items
+const LOGS_ = "/logs";
+
+// read / write logs into file
+const LOGS_WRITE_ = "/logs/write";
+const LOGS_READ_ = "/logs/read";
 
 export {
-    ITEMS_ROUTE,
-    SEARCH_ITEM_ROUTE,
-    WRITE_ITEM_ROUTE,
-    OPEN_ITEM_ROUTE,
-    LIST_ROUTES_ROUTE,
-    WRITE_LOGS_ROUTE,
-    READ_LOGS_ROUTE,
+    // context items
+    ITEMS_,
+    ITEM_SEARCH_,
+    ITEMS_WRITE_,
+    ITEMS_READ_,
+    // routes
+    ROUTES_LIST_,
+    // logs
+    LOGS_,
+    LOGS_WRITE_,
+    LOGS_READ_,
 };
