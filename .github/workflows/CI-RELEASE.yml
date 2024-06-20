@@ -27,15 +27,14 @@ jobs:
             - uses: pnpm/action-setup@v2.4.0
               with:
                   version: 8
-
-
+           
             - name: "Automated Version Bump"
               if: github.event_name != 'pull_request'
               id: version
               uses: "phips28/gh-action-bump-version@master"
-              with:
+              with: 
                   tag-prefix: "v"
-                  skip-tag: true
+                  skip-tag: true #using wording for different versions
                   minor-wording:  'feat,add,Adds,new'
                   major-wording:  'MAJOR,cut-major'
                   patch-wording:  'patch,fixes,fix'   
