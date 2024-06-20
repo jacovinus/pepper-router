@@ -38,17 +38,14 @@ jobs:
         run: pnpm install
 
       - name: "Automated Version Bump"
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]')
+        if: github.event_name != 'pull_request' 
         id: version
-        run: |
-          if [[ "${{ github.event_name }}" == "push" ]]; then npx -y semver bump patch
-          elif [[ "${{github.event.pull_request.user.login}} == 'dependabot[bot]'" ]]; then npx -y semver bump patch
-          fi
+        run: npx -y semver bump patch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Version Check"
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]')
+        if: github.event_name != 'pull_request' 
         run: echo ${{steps.version.outputs.newTag}}
 
       - name: Build 
