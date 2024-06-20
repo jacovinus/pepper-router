@@ -28,22 +28,6 @@ jobs:
         with:
           version: 8
 
-      - name: "Automated Version Bump"
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]')
-        id: version
-        run: |
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            npx -y semver bump patch
-          elif [[ "${{ github.event.pull_request.user.login }}" == "dependabot[bot]" ]]; then
-            npx -y semver bump minor
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: "Version Check"
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]')
-        run: echo ${{steps.version.outputs.newTag}}
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -52,6 +36,22 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: "Automated Version Bump"
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]')
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            npx -y semver bump patch
+          elif [[ "${{github.event.pull_request.user.login}} == 'dependabot[bot]'" ]]; then
+            npx -y semver bump minor
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Version Check"
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]')
+        run: echo ${{steps.version.outputs.newTag}}
 
       - name: Build 
         run: pnpm build
@@ -64,6 +64,7 @@ jobs:
         with:
           files: packages/main/dist/ README.md
           dest: dist.zip
+
       - name: Upload release binaries
         if: github.event_name != 'pull_request'
         uses: boxpositron/upload-multiple-releases@1.0.7
