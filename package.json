@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll --silent=false",
-    "dev": "ts-node-dev --respawn --transpile-only ./src/main.ts"
+    "dev": "ts-node-dev --respawn --transpile-only ./src/main.ts",
+    "build": "pnpm clean && pnpm tsc"
   },
   "keywords": [],
   "author": "",
