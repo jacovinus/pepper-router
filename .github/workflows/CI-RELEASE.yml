@@ -1,79 +1,79 @@
 name: CI-RELEASE
 
 on:
-    push:
-        branches: ["main"]
-        paths-ignore:
-            - "**/README.md"
-            - "**/workflows/*.yml"
-    pull_request:
-        branches: [main]
-        types: [opened, synchronize]
-        paths-ignore:
-            - "**/README.md"
-            - "**/workflows/*.yml"
+  push:
+    branches: ["main"]
+    paths-ignore:
+      - "**/README.md"
+      - "**/workflows/*.yml"
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, closed]
+    paths-ignore:
+      - "**/README.md"
+      - "**/workflows/*.yml"
 
 jobs:
-    release:
-        name: Pepper-Router Release
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [20.x]
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                  fetch-depth: 2
-            - uses: pnpm/action-setup@v2.4.0
-              with:
-                  version: 8
+  release:
+    name: Pepper-Router Release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: pnpm/action-setup@v2.4.0
+        with:
+          version: 8
 
+      - name: "Automated Version Bump"
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]')
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            npx -y semver bump patch
+          elif [[ "${{ github.event.pull_request.user.login }}" == "dependabot[bot]" ]]; then
+            npx -y semver bump minor
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: "Automated Version Bump"
-              if: github.event_name != 'pull_request'
-              id: version
-              uses: "phips28/gh-action-bump-version@master"
-              with:
-                  tag-prefix: "v"
-                  skip-tag: true
+      - name: "Version Check"
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.user.login == 'dependabot[bot]')
+        run: echo ${{steps.version.outputs.newTag}}
 
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              
-            - name: "version check"
-              if: github.event_name != 'pull_request'
-              run: echo ${{steps.version.outputs.newTag}}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
 
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v4
-              with:
-                  node-version: ${{ matrix.node-version }}
-                  cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
 
-            - name: Install dependencies
-              run: pnpm install
+      - name: Build 
+        run: pnpm build
 
-            - name: Build 
-              run: pnpm build
+      - name: Test
+        run: pnpm test
 
-            - name: Test
-              run: pnpm test
-
-            - uses: vimtor/action-zip@v1.1
-              if: github.event_name != 'pull_request'
-              with:
-                  files: packages/main/dist/ README.md
-                  dest: dist.zip
-            - name: Upload release binaries
-              if: github.event_name != 'pull_request'
-              uses: boxpositron/upload-multiple-releases@1.0.7
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  release_config: |
-                      dist.zip
-                  tag_name: ${{steps.version.outputs.newTag}}
-                  release_name: pepper-router-${{steps.version.outputs.newTag}}
-                  draft: false
-                  prerelease: false
-                  overwrite: true
+      - uses: vimtor/action-zip@v1.1
+        if: github.event_name != 'pull_request'
+        with:
+          files: packages/main/dist/ README.md
+          dest: dist.zip
+      - name: Upload release binaries
+        if: github.event_name != 'pull_request'
+        uses: boxpositron/upload-multiple-releases@1.0.7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_config: |
+            dist.zip
+          tag_name: ${{steps.version.outputs.newTag}}
+          release_name: pepper-router-${{steps.version.outputs.newTag}}
+          draft: false
+          prerelease: false
+          overwrite: true
