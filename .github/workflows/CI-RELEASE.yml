@@ -38,7 +38,7 @@ jobs:
                   skip-tag: true
                   minor-wording:  'feat,add,Adds,new'
                   major-wording:  'MAJOR,cut-major'
-                  patch-wording:  'patch,fixes, fix'   
+                  patch-wording:  'patch,fixes,fix'   
 
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
